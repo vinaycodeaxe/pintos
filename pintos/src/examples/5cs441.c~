@@ -1,0 +1,118 @@
+#include <threads/thread.h>
+#include <stdio.h>
+#include <random.h>
+#include <threads/synch.h>
+
+struct semaphore paper, tobacco, matches, agent;
+
+int i = 0;
+
+void agent_func(){
+        
+        static int j = 0;
+        while(j < 5){
+                sema_down(&agent);
+                int count = 0;
+                for(count = 0; count < 2; count++){
+                        i++;
+
+                        i = i%3;
+                        switch(i){
+                                case 0:
+                                        printf("Agent put Tobacco on the table\n");
+                                        sema_up(&tobacco);
+                                        break;
+                                case 1:
+                                        printf("Agent put Paper on the table\n");
+                                        sema_up(&paper);
+                                        break;
+                                case 2:
+                                        printf("Agent put Matches on the table\n");
+                                        sema_up(&matches);
+                                        break;
+                        }
+                }
+                j++;
+        }
+        
+}
+
+
+void smoker1_func(){
+
+        while(1){
+                bool s1 = sema_try_down(&matches); 
+                bool s2 = sema_try_down(&paper);
+                if(s1 && s2)
+                {
+                        printf("Smoker with Tobacco is smoking \n");
+                        sema_up(&agent);
+                }
+                else if(s1)
+                {
+                        sema_up(&matches);
+                }
+                else if(s2)
+                {
+                        sema_up(&paper);
+                }
+        }
+}
+
+void smoker2_func(){
+        
+        while(1){
+                bool s1 = sema_try_down(&tobacco); 
+                bool s2 = sema_try_down(&matches);
+                if(s1 && s2)
+                {
+                        printf("Smoker with Paper is smoking \n");
+                        sema_up(&agent);
+                }
+                else if(s1)
+                {
+                        sema_up(&tobacco);
+                }
+                else if(s2)
+                {
+                        sema_up(&matches);
+                }
+        }
+}
+
+void smoker3_func(){
+
+        while(1){
+                bool s1 = sema_try_down(&tobacco); 
+                bool s2 = sema_try_down(&paper);
+                if(s1 && s2)
+                {
+                        printf("Smoker with Matches is smoking \n");
+                        sema_up(&agent);
+                        
+                }
+                else if(s1)
+                {
+                        sema_up(&tobacco);
+                }
+                else if(s2)
+                {
+                        sema_up(&paper);
+                }
+        }
+}
+void test_5cs44(void)
+{
+
+        sema_init(&tobacco, 0);
+        sema_init(&paper, 0);
+        sema_init(&matches, 0);
+        sema_init(&agent, 1);
+
+        thread_create("Agent",PRI_DEFAULT,&agent_func,"");
+
+        thread_create("smoker1",PRI_DEFAULT,&smoker1_func,"");
+        thread_create("smoker2",PRI_DEFAULT,&smoker2_func,"");
+        thread_create("smoker3",PRI_DEFAULT,&smoker3_func,"");
+        
+}
