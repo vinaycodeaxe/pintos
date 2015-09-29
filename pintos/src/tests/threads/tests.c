@@ -40,7 +40,7 @@ static const struct test tests[] =
     {"mlfqs-block", test_mlfqs_block},
     {"ass2cs44",test_ass2cs44},
     {"3cs44",test_3cs44},
-    
+    {"5cs44",test_5cs44},
   
   };
 

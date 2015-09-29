@@ -34,7 +34,7 @@ extern test_func test_mlfqs_nice_10;
 extern test_func test_mlfqs_block;
 extern test_func test_ass2cs44;
 extern test_func test_3cs44;
-extern test_func test_5cs44;
+
 
 
 void msg (const char *, ...);
