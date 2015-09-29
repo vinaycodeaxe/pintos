@@ -38,7 +38,7 @@ tests/threads_SRC += tests/threads/mlfqs-fair.c
 tests/threads_SRC += tests/threads/mlfqs-block.c
 tests/threads_SRC += examples/ass2cs44.c
 tests/threads_SRC += examples/3cs44.c
-
+tests/threads_SRC += examples/5cs44.c
 
 
 MLFQS_OUTPUTS = 				\
